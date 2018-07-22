@@ -6,6 +6,7 @@
 
 ### Bugfixes
 - [#1292](https://github.com/openscope/openscope/issues/1292) - Ensure taxi instructions are ignored when aircraft is taking off
+- [#943](https://github.com/openscope/openscope/issues/943) - Fix random spawn calculations to ensure arrivals are available quickly
 
 
 ### Enhancements & Refactors
