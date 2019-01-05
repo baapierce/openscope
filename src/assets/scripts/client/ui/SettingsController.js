@@ -9,7 +9,11 @@ import { SELECTORS } from '../constants/selectors';
  * @type {string}
  * @final
  */
-const UI_SETTINGS_MODAL_TEMPLATE = '<div class="option-dialog dialog"><p class="dialog-titel">Options</p><div class="dialog-body nice-scrollbar"></div></div>';
+const UI_SETTINGS_MODAL_TEMPLATE = `
+    <div class="option-dialog dialog">
+        <p class="dialog-title">Options</p>
+        <div class="dialog-body nice-scrollbar"></div>
+    </div>`;
 
 /**
  * @property UI_OPTION_CONTAINER_TEMPLATE
@@ -24,7 +28,6 @@ const UI_OPTION_CONTAINER_TEMPLATE = '<div class="option"></div>';
  * @final
  */
 const UI_OPTION_SELECTOR_TEMPLATE = '<span class="option-type-select"></span>';
-
 
 /**
  * @class SettingsController
