@@ -1,21 +1,57 @@
+# 6.10.0 (February 1, 2019)
+### New Features
+- [#1032](https://github.com/openscope/openscope/issues/1032) - Add range ring options and toggle button
+
+
+### Bugfixes
+
+
+### Enhancements & Refactors
+- [#1247](https://github.com/openscope/openscope/issues/1247) - Determine initial climb altitude from the SID
+- [#16](https://github.com/openscope/openscope/issues/16) - Scaling Traffic Volume/user specified spawnPattern rates
+
+
+# 6.9.1 (January 4, 2019)
+### Hotfixes
+- [#1284](https://github.com/openscope/openscope/issues/1284) - Fixes overflow issues with tests
+
+
+# 6.9.0 (January 1, 2019)
+### Bugfixes
+- [#1250](https://github.com/openscope/openscope/issues/1250) - Fix fatal error code 128 during `npm install`
+- [#1240](https://github.com/openscope/openscope/issues/1240) - Fix readback from departure cleared for takeoff when they aren't first in line
+- [#1259](https://github.com/openscope/openscope/issues/1259) - Fix speech synthesis's use of "heavy/super" in callsigns
+- [#1266](https://github.com/openscope/openscope/issues/1266) - Fix A380 speed definitions
+- [#1158](https://github.com/openscope/openscope/issues/1158) - Fix Firefox strip bay scrollbars are not working
+- [#1242](https://github.com/openscope/openscope/issues/1242) - Fix too-low glideslope intercept messages not showing
+- [#1279](https://github.com/openscope/openscope/issues/1279) - Fix erroneous altitudes appearing in flight strip
+
+### Enhancements & Refactors
+- [#1264](https://github.com/openscope/openscope/issues/1264) &[#1265](https://github.com/openscope/openscope/issues/1265) - Change the "super" weight class identifier from `U` to `J`
+- [#1269](https://github.com/openscope/openscope/issues/1269) - Updates [Google Analytics](https://developers.google.com/analytics/devguides/collection/gtagjs/migration) tracking function from `ga` to `gtag`
+- [#727](https://github.com/openscope/openscope/issues/727) &[#1265](https://github.com/openscope/openscope/issues/1265) - Updates to the tutorial
+- [#1238](https://github.com/openscope/openscope/issues/1238) - Grant IFR clearance when any type of route amendment is issued
+- [#1232](https://github.com/openscope/openscope/issues/1232) - Require proper application of separation with same-runway subsequent departures
+- [#1275](https://github.com/openscope/openscope/issues/1275) - Updates `buildMarkup` task to output date and time when generating the `index.html` file
+
+
 # 6.8.0 (December 1, 2018)
 ### New Features
 - [#1003](https://github.com/openscope/openscope/issues/1003) - Add assigned runway to the aircrafts' strips
 - [#945](https://github.com/openscope/openscope/issues/945) - Add airport information panel to scope
 - [#159](https://github.com/openscope/openscope/issues/159) - Add in-game link to GitHub repo
-
-
-
-
+- [#1212](https://github.com/openscope/openscope/issues/1212) - Randomize pilot voice for each aircraft
+- [#1197](https://github.com/openscope/openscope/issues/1197) - Adds custom analytics event tracking
 
 ### Bugfixes
 - [#1147](https://github.com/openscope/openscope/issues/1147) - Fix Callsigns in tutorial should update when switching airports
 - [#1045](https://github.com/openscope/openscope/issues/1045) - Fix descent planning logic so arrivals can meet their altitude restrictions
 - [#1084](https://github.com/openscope/openscope/issues/1084) - Add messages for too-low glideslope intercepts
-
-
-
-
+- [#155](https://github.com/openscope/openscope/issues/155) - Accept entrail property in spawnPatternModel
+- [#1193](https://github.com/openscope/openscope/issues/1193) - Adds `SettingsController` instantiation to `UiController.init()`
+- [#1202](https://github.com/openscope/openscope/issues/1202) - Prevent pilot from responding with "say again, say again"
+- [#1154](https://github.com/openscope/openscope/issues/1154) - Ensure that the runway is valid for SID before takeoff
+- [#955](https://github.com/openscope/openscope/issues/955) - Fix `sid` command`
 
 ### Enhancements & Refactors
 - [#1075](https://github.com/openscope/openscope/issues/1075) - Typo In surgePattern documentation
@@ -24,10 +60,13 @@
 - [#1179](https://github.com/openscope/openscope/issues/1179) - Extract settings related code from UiController into its own controller
 - [#1171](https://github.com/openscope/openscope/issues/1171) - Move tutorial from InputController to UiController
 - [#1114](https://github.com/openscope/openscope/issues/1114), [#1115](https://github.com/openscope/openscope/issues/1115) - Update broken documentation links
-- [#16](https://github.com/openscope/openscope/issues/16) - Scaling Traffic Volume/user specified spawnPattern rates
-
-
-
+- [#308](https://github.com/openscope/openscope/issues/308) - Abstract Aircraft.getWind() to the AirportModel
+- [#1199](https://github.com/openscope/openscope/issues/1199) - Change taxi readback to "taxi to and hold short of Runway 1"
+- [#1208](https://github.com/openscope/openscope/issues/1208) - Update Thomas Cook callsign
+- [#1209](https://github.com/openscope/openscope/issues/1209) - Update TUI Airways callsign
+- [#604](https://github.com/openscope/openscope/issues/604) - Adds support for dataBlock timeshare data
+- [#678](https://github.com/openscope/openscope/issues/678) - Removes wind vane visualization from `CanvasController`
+- [#1137](https://github.com/openscope/openscope/issues/1137) - Updates project dependencies
 
 
 # 6.7.0 (November 1, 2018)

@@ -2,7 +2,9 @@ import $ from 'jquery';
 import _keys from 'lodash/keys';
 import AirportController from '../airport/AirportController';
 import EventBus from '../lib/EventBus';
+import EventTracker from '../EventTracker';
 import GameController from '../game/GameController';
+import SettingsController from './SettingsController';
 import TutorialView from './TutorialView';
 import SettingsController from './SettingsController';
 import TrafficRateController from './TrafficRateController';
@@ -10,6 +12,7 @@ import { speech_toggle } from '../speech';
 import { EVENT } from '../constants/eventNames';
 import { INVALID_NUMBER } from '../constants/globalConstants';
 import { SELECTORS } from '../constants/selectors';
+import { TRACKABLE_EVENT } from '../constants/trackableEvents';
 
 /**
  * @class UiController
@@ -21,11 +24,13 @@ class UiController {
     constructor() {
         this._eventBus = null;
         this.tutorialView = null;
+        this.settingsController = null;
 
         this.$element = null;
         this.$airportDialog = null;
         this.$airportDialogBody = null;
         this.$fastForwards = null;
+        this.$githubLinkElement = null;
         this.$pauseToggle = null;
         this.$pausedImg = null;
         this.$speechToggle = null;
@@ -60,6 +65,7 @@ class UiController {
         this.$airportDialog = this.$element.find(SELECTORS.DOM_SELECTORS.AIRPORT_SWITCH);
         this.$airportDialogBody = this.$airportDialog.find('.dialog-body');
         this.$fastForwards = this.$element.find(SELECTORS.DOM_SELECTORS.FAST_FORWARDS);
+        this.$githubLinkElement = this.$element.find(SELECTORS.DOM_SELECTORS.GITHUB_EXTERNAL_LINK)
         this.$pauseToggle = this.$element.find(SELECTORS.DOM_SELECTORS.PAUSE_TOGGLE);
         this.$pausedImg = this.$element.find(`${SELECTORS.DOM_SELECTORS.PAUSED} img`);
         this.$speechToggle = this.$element.find(SELECTORS.DOM_SELECTORS.SPEECH_TOGGLE);
@@ -96,10 +102,11 @@ class UiController {
      * @method enable
      */
     enable() {
+        // TODO: move these to properly bound handler methods
         this.$fastForwards.on('click', (event) => GameController.game_timewarp_toggle(event));
+        this.$githubLinkElement.on('click', (event) => this.onClickGithubLink(event));
         this.$pauseToggle.on('click', (event) => GameController.game_pause_toggle(event));
         this.$pausedImg.on('click', (event) => GameController.game_unpause(event));
-
         this.$speechToggle.on('click', (event) => speech_toggle(event));
         this.$switchAirport.on('click', (event) => this.onToggleAirportList(event));
         this.$toggleLabels.on('click', (event) => this.onToggleLabels(event));
@@ -123,9 +130,9 @@ class UiController {
      */
     disable() {
         this.$fastForwards.off('click', (event) => GameController.game_timewarp_toggle(event));
+        this.$githubLinkElement.off('click', (event) => this.onClickGithubLink(event));
         this.$pauseToggle.off('click', (event) => GameController.game_pause_toggle(event));
         this.$pausedImg.off('click', (event) => GameController.game_unpause(event));
-
         this.$speechToggle.off('click', (event) => speech_toggle(event));
         this.$switchAirport.off('click', (event) => this.onToggleAirportList(event));
         this.$toggleLabels.off('click', (event) => this.onToggleLabels(event));
@@ -150,13 +157,13 @@ class UiController {
     destroy() {
         this._eventBus = null;
         this.tutorialView = null;
-        this.ui = {};
-        this.ui.scale = INVALID_NUMBER;
+        this.settingsController = null;
 
         this.$element = null;
         this.$airportDialog = null;
         this.$airportDialogBody = null;
         this.$fastForwards = null;
+        this.$githubLinkElement = null;
         this.$pauseToggle = null;
         this.$pausedImg = null;
         this.$speechToggle = null;
@@ -330,11 +337,13 @@ class UiController {
      * @return {DOM element|string}
      */
     _buildAirportListItemTemplate(icao, difficulty, name) {
-        return `<li class="airport-list-item icao-${icao.toLowerCase()}">` +
-                    `<span style="font-size: 7pt" class="difficulty">${difficulty}</span>` +
-                    `<span class="icao">${icao.toUpperCase()}</span>` +
-                    `<span class="name">${name}</span>` +
-                '</li>';
+        return `
+            <li class="airport-list-item icao-${icao.toLowerCase()}">
+                <span style="font-size: 7pt" class="difficulty">${difficulty}</span>
+                <span class="icao">${icao.toUpperCase()}</span>
+                <span class="name">${name}</span>
+            </li>
+        `;
     }
 
     /**
@@ -346,6 +355,7 @@ class UiController {
 
         if (warn) {
             html.addClass(SELECTORS.CLASSNAMES.WARN);
+            EventTracker.recordEvent(TRACKABLE_EVENT.UI_LOG, 'error', message);
         }
 
         const $log = $(SELECTORS.DOM_SELECTORS.LOG);
@@ -366,6 +376,7 @@ class UiController {
      * @method _onClickOpenAirportDialog
      */
     _onClickOpenAirportDialog() {
+        EventTracker.recordEvent(TRACKABLE_EVENT.AIRPORTS, 'airport-switcher', 'open');
         this.$airportDialog.addClass(SELECTORS.CLASSNAMES.OPEN);
 
         const $previousActiveAirport = this.$airportDialogBody.find(SELECTORS.DOM_SELECTORS.AIRPORT_LIST_ITEM_IS_ACTIVE);
@@ -387,6 +398,7 @@ class UiController {
      * @private
      */
     _onClickCloseAirportDialog() {
+        EventTracker.recordEvent(TRACKABLE_EVENT.AIRPORTS, 'airport-switcher', 'close');
         this.$airportDialog.removeClass(SELECTORS.CLASSNAMES.OPEN);
         this.$switchAirport.removeClass(SELECTORS.CLASSNAMES.ACTIVE);
     }
@@ -411,8 +423,10 @@ class UiController {
      * @param {jquery event}
      */
     onToggleLabels(event) {
-        $(event.target).closest(SELECTORS.DOM_SELECTORS.CONTROL).toggleClass(SELECTORS.CLASSNAMES.ACTIVE);
+        const labelButtonElement = $(event.target).closest(SELECTORS.DOM_SELECTORS.CONTROL);
 
+        EventTracker.recordEvent(TRACKABLE_EVENT.OPTIONS, 'fix-runway-labels', `${labelButtonElement.hasClass(SELECTORS.CLASSNAMES.ACTIVE)}`);
+        labelButtonElement.toggleClass(SELECTORS.CLASSNAMES.ACTIVE);
         this._eventBus.trigger(EVENT.TOGGLE_LABELS);
     }
 
@@ -421,9 +435,10 @@ class UiController {
      * @method onToggleRestrictedAreas
      */
     onToggleRestrictedAreas(event) {
-        $(event.target).closest(SELECTORS.DOM_SELECTORS.CONTROL)
-            .toggleClass(`${SELECTORS.DOM_SELECTORS.WARNING_BUTTON} ${SELECTORS.CLASSNAMES.ACTIVE}`);
+        const restrictedButtonElement = $(event.target).closest(SELECTORS.DOM_SELECTORS.CONTROL);
 
+        restrictedButtonElement.toggleClass(`${SELECTORS.DOM_SELECTORS.WARNING_BUTTON} ${SELECTORS.CLASSNAMES.ACTIVE}`);
+        EventTracker.recordEvent(TRACKABLE_EVENT.OPTIONS, 'restricted', `${restrictedButtonElement.hasClass(SELECTORS.CLASSNAMES.ACTIVE)}`);
         this._eventBus.trigger(EVENT.TOGGLE_RESTRICTED_AREAS);
     }
 
@@ -432,6 +447,7 @@ class UiController {
     * @method onToggleOptions
     */
     onToggleOptions() {
+        EventTracker.recordEvent(TRACKABLE_EVENT.SETTINGS, 'toggle-dialog', `${this.$toggleOptions.hasClass(SELECTORS.CLASSNAMES.ACTIVE)}`);
         this.$toggleOptions.toggleClass(SELECTORS.CLASSNAMES.ACTIVE);
         this.settingsController.toggleDialog();
     }
@@ -442,8 +458,10 @@ class UiController {
      * @param event {jquery event}
      */
     onToggleSids(event) {
-        $(event.target).closest(SELECTORS.DOM_SELECTORS.CONTROL).toggleClass(SELECTORS.CLASSNAMES.ACTIVE);
+        const $sisdButtonElement = $(event.target).closest(SELECTORS.DOM_SELECTORS.CONTROL);
 
+        $sisdButtonElement.toggleClass(SELECTORS.CLASSNAMES.ACTIVE);
+        EventTracker.recordEvent(TRACKABLE_EVENT.OPTIONS, 'sids', `${$sisdButtonElement.hasClass(SELECTORS.CLASSNAMES.ACTIVE)}`);
         this._eventBus.trigger(EVENT.TOGGLE_SID_MAP);
     }
 
@@ -453,8 +471,10 @@ class UiController {
      * @param event {jquery event}
      */
     onToggleStars(event) {
-        $(event.target).closest(SELECTORS.DOM_SELECTORS.CONTROL).toggleClass(SELECTORS.CLASSNAMES.ACTIVE);
+        const $starsButtonElement = $(event.target).closest(SELECTORS.DOM_SELECTORS.CONTROL);
 
+        $starsButtonElement.toggleClass(SELECTORS.CLASSNAMES.ACTIVE);
+        EventTracker.recordEvent(TRACKABLE_EVENT.OPTIONS, 'stars', `${$starsButtonElement.hasClass(SELECTORS.CLASSNAMES.ACTIVE)}`);
         this._eventBus.trigger(EVENT.TOGGLE_STAR_MAP);
     }
 
@@ -464,8 +484,10 @@ class UiController {
      * @param event {jquery event}
      */
     onToggleTerrain(event) {
-        $(event.target).closest(SELECTORS.DOM_SELECTORS.CONTROL).toggleClass(SELECTORS.CLASSNAMES.ACTIVE);
+        const $terrainButtonElement = $(event.target).closest(SELECTORS.DOM_SELECTORS.CONTROL);
 
+        $terrainButtonElement.toggleClass(SELECTORS.CLASSNAMES.ACTIVE);
+        EventTracker.recordEvent(TRACKABLE_EVENT.OPTIONS, 'terrain', `${$terrainButtonElement.hasClass(SELECTORS.CLASSNAMES.ACTIVE)}`);
         this._eventBus.trigger(EVENT.TOGGLE_TERRAIN);
     }
 
@@ -474,8 +496,10 @@ class UiController {
     * @method onToggleTutorial
     */
     onToggleTutorial() {
-        $(event.target).closest(SELECTORS.DOM_SELECTORS.CONTROL).toggleClass(SELECTORS.CLASSNAMES.ACTIVE);
+        const $tutorialButtonElement = $(event.target).closest(SELECTORS.DOM_SELECTORS.CONTROL);
 
+        $tutorialButtonElement.toggleClass(SELECTORS.CLASSNAMES.ACTIVE);
+        EventTracker.recordEvent(TRACKABLE_EVENT.OPTIONS, 'tutorial', `${$tutorialButtonElement.hasClass(SELECTORS.CLASSNAMES.ACTIVE)}`);
         this._eventBus.trigger(EVENT.TOGGLE_TUTORIAL);
     }
 
@@ -485,8 +509,10 @@ class UiController {
      * @param event {jquery event}
      */
     onToggleVideoMap(event) {
-        $(event.target).closest(SELECTORS.DOM_SELECTORS.CONTROL).toggleClass(SELECTORS.CLASSNAMES.ACTIVE);
+        const $videoMapButtonElement = $(event.target).closest(SELECTORS.DOM_SELECTORS.CONTROL);
 
+        $videoMapButtonElement.toggleClass(SELECTORS.CLASSNAMES.ACTIVE);
+        EventTracker.recordEvent(TRACKABLE_EVENT.OPTIONS, 'video-map', `${$videoMapButtonElement.hasClass(SELECTORS.CLASSNAMES.ACTIVE)}`);
         this._eventBus.trigger(EVENT.TOGGLE_VIDEO_MAP);
     }
 
@@ -498,6 +524,17 @@ class UiController {
     onToggleTraffic(event) {
         this.$toggleTraffic.toggleClass(SELECTORS.CLASSNAMES.ACTIVE);
         this.trafficRateController.toggleDialog();
+    }
+
+    /**
+     * Provides a hook to track a click event for ga
+     *
+     * @for UiController
+     * @method onClickGithubLink
+     * @param event {jquery event}
+     */
+    onClickGithubLink(event) {
+        EventTracker.recordClickOnOutboundLink(event.target.href);
     }
 }
 

@@ -5,8 +5,9 @@ import AircraftController from './aircraft/AircraftController';
 import AirlineController from './airline/AirlineController';
 import AirportController from './airport/AirportController';
 import CanvasController from './canvas/CanvasController';
-import ContentQueue from './contentQueue/ContentQueue';
 import AirportInfoController from './info/AirportInfoController';
+import ContentQueue from './contentQueue/ContentQueue';
+import EventTracker from './EventTracker';
 import GameController from './game/GameController';
 import InputController from './InputController';
 import EventBus from './lib/EventBus';
@@ -16,9 +17,11 @@ import ScopeModel from './scope/ScopeModel';
 import SpawnPatternCollection from './trafficGenerator/SpawnPatternCollection';
 import SpawnScheduler from './trafficGenerator/SpawnScheduler';
 import UiController from './ui/UiController';
+import ScoreController from './game/ScoreController';
+import { speech_init } from './speech';
 import { EVENT } from './constants/eventNames';
 import { SELECTORS } from './constants/selectors';
-import { speech_init } from './speech';
+import { TRACKABLE_EVENT } from './constants/trackableEvents';
 
 /**
  * Root controller class
@@ -138,6 +141,8 @@ export default class AppController {
      * @param aircraftTypeDefinitionList {array<object>}
      */
     setupChildren(airportLoadList, initialAirportIcao, initialAirportData, airlineList, aircraftTypeDefinitionList) {
+        EventTracker.recordEvent(TRACKABLE_EVENT.AIRPORTS, 'initial-load', initialAirportIcao);
+
         this.$canvasesElement = this.$element.find(SELECTORS.DOM_SELECTORS.CANVASES);
 
         // TODO: this entire method needs to be re-written. this is a temporary implemenation used to
@@ -158,6 +163,7 @@ export default class AppController {
         this.airlineController = new AirlineController(airlineList);
         this.scopeModel = new ScopeModel();
         this.aircraftController = new AircraftController(aircraftTypeDefinitionList, this.airlineController, this.scopeModel);
+        this.scoreController = new ScoreController(this.aircraftController);
 
         SpawnScheduler.init(this.aircraftController);
 
@@ -170,7 +176,7 @@ export default class AppController {
         UiController.init(this.$element);
 
         this.canvasController = new CanvasController(this.$canvasesElement, this.aircraftController, this.scopeModel);
-        this.aircraftCommander = new AircraftCommander(this.aircraftController.onRequestToChangeTransponderCode);
+        this.aircraftCommander = new AircraftCommander(this.aircraftController, this.aircraftController.onRequestToChangeTransponderCode);
         this.inputController = new InputController(this.$element, this.aircraftCommander, this.aircraftController, this.scopeModel);
         this.airportInfoController = new AirportInfoController(this.$element);
 
@@ -243,7 +249,7 @@ export default class AppController {
      * @method updatePost
      */
     updatePost() {
-        this.canvasController.canvas_update_post();
+        this.canvasController.canvasUpdatePost();
         this.aircraftController.updateAircraftStrips();
     }
 
@@ -267,6 +273,7 @@ export default class AppController {
             return;
         }
 
+        EventTracker.recordEvent(TRACKABLE_EVENT.AIRPORTS, 'airport-switcher', nextAirportJson.icao);
         NavigationLibrary.reset();
         this.airlineController.reset();
         this.aircraftController.aircraft_remove_all();
