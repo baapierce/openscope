@@ -6,11 +6,9 @@ import EventTracker from '../EventTracker';
 import GameController from '../game/GameController';
 import SettingsController from './SettingsController';
 import TutorialView from './TutorialView';
-import SettingsController from './SettingsController';
 import TrafficRateController from './TrafficRateController';
 import { speech_toggle } from '../speech';
 import { EVENT } from '../constants/eventNames';
-import { INVALID_NUMBER } from '../constants/globalConstants';
 import { SELECTORS } from '../constants/selectors';
 import { TRACKABLE_EVENT } from '../constants/trackableEvents';
 
