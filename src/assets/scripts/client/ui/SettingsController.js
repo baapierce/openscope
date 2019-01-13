@@ -20,14 +20,14 @@ const UI_SETTINGS_MODAL_TEMPLATE = `
  * @type {string}
  * @final
  */
-const UI_OPTION_CONTAINER_TEMPLATE = '<div class="option"></div>';
+const UI_OPTION_CONTAINER_TEMPLATE = '<div class="form-element"></div>';
 
 /**
  * @property UI_OPTION_SELECTOR_TEMPLATE
  * @type {string}
  * @final
  */
-const UI_OPTION_SELECTOR_TEMPLATE = '<span class="option-type-select"></span>';
+const UI_OPTION_SELECTOR_TEMPLATE = '<span class="form-type-select"></span>';
 
 /**
  * @class SettingsController
@@ -111,7 +111,7 @@ export default class SettingsController {
      */
     _buildOptionTemplate(option) {
         const $container = $(UI_OPTION_CONTAINER_TEMPLATE);
-        $container.append(`<span class="option-label">${option.description}</span>`);
+        $container.append(`<span class="form-label">${option.description}</span>`);
 
         const $optionSelector = $(UI_OPTION_SELECTOR_TEMPLATE);
         const $selector = $(`<select name="${option.name}"></select>`);
