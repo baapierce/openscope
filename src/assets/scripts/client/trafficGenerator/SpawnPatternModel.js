@@ -672,10 +672,11 @@ export default class SpawnPatternModel extends BaseModel {
         }
 
         this._aircraftPerHourUp = this.speed / this.entrail[0];
-        this._aircraftPerHourDown = this.speed / this.entrail[1];  // to help the uptime calculation
+        this._aircraftPerHourDown = this.speed / this.entrail[1]; // to help the uptime calculation
 
         // TODO: move this calculation out to a helper function or class method
-        this.uptime = (this.period * this.rate - this.period * this._aircraftPerHourDown) / (this._aircraftPerHourUp - this._aircraftPerHourDown);
+        this.uptime = (this.period * this.rate - this.period * this._aircraftPerHourDown)
+            / (this._aircraftPerHourUp - this._aircraftPerHourDown);
         this.uptime -= this.uptime % (TIME.ONE_HOUR_IN_SECONDS / this._aircraftPerHourUp);
 
         // TODO: abstract to helper
@@ -814,13 +815,21 @@ export default class SpawnPatternModel extends BaseModel {
             this.cycleStartTime += this.period;
 
             return TIME.ONE_HOUR_IN_SECONDS / (this.rate + (progressInPeriod - 4) * this.variation);
-        } else if (progressInPeriod <= 1) {
+        }
+
+        if (progressInPeriod <= 1) {
             return TIME.ONE_HOUR_IN_SECONDS / (this.rate + progressInPeriod * this.variation);
-        } else if (progressInPeriod <= 2) {
+        }
+
+        if (progressInPeriod <= 2) {
             return TIME.ONE_HOUR_IN_SECONDS / (this.rate + (2 * (this.period - 2 * totalTime) / this.period) * this.variation);
-        } else if (progressInPeriod <= 3) {
+        }
+
+        if (progressInPeriod <= 3) {
             return TIME.ONE_HOUR_IN_SECONDS / (this.rate - (progressInPeriod - 2) * this.variation);
-        } else if (progressInPeriod < 4) {
+        }
+
+        if (progressInPeriod < 4) {
             return TIME.ONE_HOUR_IN_SECONDS / (this.rate - (4 * (this.period - totalTime) / this.period) * this.variation);
         }
     }
@@ -866,7 +875,9 @@ export default class SpawnPatternModel extends BaseModel {
         if (timeRemaining > intervalDown + intervalUp) {
             // plenty of time until new period
             return intervalDown;
-        } else if (timeRemaining > intervalDown) {
+        }
+
+        if (timeRemaining > intervalDown) {
             // next plane will delay the first arrival of the next period
             return intervalDown - (totalTime + intervalDown + intervalUp - this.period);
         }
@@ -922,9 +933,9 @@ export default class SpawnPatternModel extends BaseModel {
      * @private
      */
     _isValidCategory(category) {
-        return category === FLIGHT_CATEGORY.ARRIVAL ||
-            category === FLIGHT_CATEGORY.DEPARTURE ||
-            category === FLIGHT_CATEGORY.OVERFLIGHT;
+        return category === FLIGHT_CATEGORY.ARRIVAL
+            || category === FLIGHT_CATEGORY.DEPARTURE
+            || category === FLIGHT_CATEGORY.OVERFLIGHT;
     }
 
     /**
