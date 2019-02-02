@@ -63,7 +63,7 @@ class UiController {
         this.$airportDialog = this.$element.find(SELECTORS.DOM_SELECTORS.AIRPORT_SWITCH);
         this.$airportDialogBody = this.$airportDialog.find('.dialog-body');
         this.$fastForwards = this.$element.find(SELECTORS.DOM_SELECTORS.FAST_FORWARDS);
-        this.$githubLinkElement = this.$element.find(SELECTORS.DOM_SELECTORS.GITHUB_EXTERNAL_LINK)
+        this.$githubLinkElement = this.$element.find(SELECTORS.DOM_SELECTORS.GITHUB_EXTERNAL_LINK);
         this.$pauseToggle = this.$element.find(SELECTORS.DOM_SELECTORS.PAUSE_TOGGLE);
         this.$pausedImg = this.$element.find(`${SELECTORS.DOM_SELECTORS.PAUSED} img`);
         this.$speechToggle = this.$element.find(SELECTORS.DOM_SELECTORS.SPEECH_TOGGLE);
@@ -492,8 +492,9 @@ class UiController {
     /**
     * @for UiController
     * @method onToggleTutorial
+    * @param event {jquery event}
     */
-    onToggleTutorial() {
+    onToggleTutorial(event) {
         const $tutorialButtonElement = $(event.target).closest(SELECTORS.DOM_SELECTORS.CONTROL);
 
         $tutorialButtonElement.toggleClass(SELECTORS.CLASSNAMES.ACTIVE);
