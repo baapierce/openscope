@@ -9,6 +9,7 @@
 
 
 ### Enhancements & Refactors
+- [#804](https://github.com/openscope/openscope/issues/804) - Adds a changelog in-game
 
 
 # 6.10.0 (February 1, 2019)
