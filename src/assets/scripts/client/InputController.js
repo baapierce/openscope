@@ -497,7 +497,7 @@ export default class InputController {
             return true;
         }
 
-        const { parentElement } = $element;
+        const parentElement = $element.parentElement;
 
         return parentElement && this._isDialog(parentElement);
     }
