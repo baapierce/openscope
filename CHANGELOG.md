@@ -1,16 +1,24 @@
-# 6.11.0 (March 1, 2019)
+# 6.12.0 (April 1, 2019)
 ### New Features
-- [#898](https://github.com/openscope/openscope/issues/898) - Add command to exit holding pattern
-- [#1272](https://github.com/openscope/openscope/issues/1272) - Add version number to settings menu
 
 
 ### Bugfixes
-- [#1305](https://github.com/openscope/openscope/issues/1305) - Fix range rings center is undefined
-- [#1312](https://github.com/openscope/openscope/issues/1312) - Fix KRDU arrival descent problems to some extent
 
 
 ### Enhancements & Refactors
 - [#804](https://github.com/openscope/openscope/issues/804) - Adds a changelog in-game
+
+
+# 6.11.0 (March 4, 2019)
+### New Features
+- [#898](https://github.com/openscope/openscope/issues/898) - Add command to exit holding pattern
+- [#1272](https://github.com/openscope/openscope/issues/1272) - Add version number to settings menu
+
+### Bugfixes
+- [#1305](https://github.com/openscope/openscope/issues/1305) - Fix range rings center is undefined
+- [#1312](https://github.com/openscope/openscope/issues/1312) - Fix KRDU arrival descent problems to some extent
+- [#1329](https://github.com/openscope/openscope/issues/1329) - Free up CIDs after use
+- [#1324](https://github.com/openscope/openscope/issues/1324) - Restore support for numpad enter
 
 
 # 6.10.0 (February 1, 2019)
