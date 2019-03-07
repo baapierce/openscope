@@ -3,9 +3,11 @@
 
 
 ### Bugfixes
+- [#1335](https://github.com/openscope/openscope/issues/1335) - Fix inconsistent state of control buttons when window loses and regains focus.
 
 
 ### Enhancements & Refactors
+- [#10](https://github.com/openscope/openscope/issues/10) - Command for crossing restrictions (only altitude)
 - [#804](https://github.com/openscope/openscope/issues/804) - Adds a changelog in-game
 
 
