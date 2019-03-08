@@ -2,7 +2,6 @@ import _forEach from 'lodash/forEach';
 import SpawnPatternCollection from './SpawnPatternCollection';
 import TimeKeeper from '../engine/TimeKeeper';
 import GameController from '../game/GameController';
-import { FLIGHT_CATEGORY } from '../constants/aircraftConstants';
 
 /**
  * Used to create a game_timer for a `SpawnPatternModel` and provide
